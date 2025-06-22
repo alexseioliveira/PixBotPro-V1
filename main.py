@@ -1,9 +1,13 @@
 import requests
+import json
+import sqlite3
+import time
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 
-BOT_TOKEN = '7894687678:AAGrp4b_zY44BcC1ldOpCwxRi4me3Zikfa4'
+BOT_TOKEN = '7894687678:AAGrp4b_zY44BcC1ldOpCwxRi4me3zikfa4'
 
+# Função de pagamento simulada
 async def receber_pagamento(update: Update, context: ContextTypes.DEFAULT_TYPE):
     valor = update.message.text.split("r")[-1].replace("_", ".")
     try:
@@ -18,12 +22,14 @@ async def receber_pagamento(update: Update, context: ContextTypes.DEFAULT_TYPE):
     except Exception as e:
         await update.message.reply_text("Erro. Tente novamente.")
 
+# Funções complementares
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Bem-vindo! Use os comandos para iniciar o pagamento.")
 
 async def comprar(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Escolha o valor: /valor9_99 /valor19_99 /valor29_99 /valor49_99")
 
+# Função principal
 async def main():
     app = ApplicationBuilder().token(BOT_TOKEN).build()
 
