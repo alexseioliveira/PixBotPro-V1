@@ -24,6 +24,9 @@ async def receber_pagamento(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("Erro. Tente novamente.")
 
 # Inicia o bot
+from telegram.ext import ApplicationBuilder, CommandHandler
+import asyncio
+
 async def main():
     app = ApplicationBuilder().token(BOT_TOKEN).build()
 
@@ -39,6 +42,9 @@ async def main():
     await app.start()
     await app.updater.start_polling()
     await app.updater.idle()
+
+if __name__ == '__main__':
+    asyncio.run(main())
 
 # Funções complementares
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
