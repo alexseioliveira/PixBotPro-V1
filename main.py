@@ -1,62 +1,23 @@
 import logging
+import requests
+import json
 import sqlite3
 import time
-import requests
 from telegram import Update
-from telegram.ext import ApplicationBuilder, ContextTypes, CommandHandler, CallbackContext
+from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 
-from config import BOT_TOKEN, PUSHINPAY_TOKEN, GROUP_ID
+BOT_TOKEN = '7894687678:AAGrp4b_zY44BcC1ldOpCwxRi4me3Zikfa4'
 
-
-# Iniciar banco de dados SQLite
-conn = sqlite3.connect('assinantes.db')
-cursor = conn.cursor()
-cursor.execute('''
-CREATE TABLE IF NOT EXISTS assinantes (
-    user_id INTEGER PRIMARY KEY,
-    username TEXT,
-    data_expiracao INTEGER
-)
-''')
-conn.commit()
-
-# Iniciar logs
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
-
-# Comando /start
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Bem-vindo ao PixBot Pro!\nEscolha seu plano:\n\n"
-                                    "7 dias - R$ 9,99\n"
-                                    "30 dias - R$ 19,99\n"
-                                    "90 dias - R$ 29,99\n"
-                                    "Vitalício - R$ 49,99\n\n"
-                                    "Digite: /comprar")
-
-# Comando /comprar
-async def comprar(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Para comprar, escolha um dos planos e me envie o valor. (9.99, 19.99, 29.99 ou 49.99)")
-
-# Receber o valor enviado
+# Função de pagamento simulada
 async def receber_pagamento(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    valor = update.message.text.split("r")[-1].replace("_", ".")
     try:
-        valor = float(update.message.text.replace(",", "."))
-        if valor not in [9.99, 19.99, 29.99, 49.99]:
-            await update.message.reply_text("Valor inválido. Envie o valor correto do plano.")
-            return
-        
-        # Cria cobrança no PushinPay
-        payload = {
-            "value": valor,
-            "key": PUSHINPAY_TOKEN,
-            "name": f"Assinatura PixBot Pro - {valor}",
-            "expire": 3600  # expira em 1 hora
-        }
-        response = requests.post("https://api.pushinpay.com/api/v1/charge", json=payload)
-        data = response.json()
+        resposta = requests.post("https://api.exemplo.com/pagamento", data={'valor': valor})
+        data = resposta.json()
 
         if data.get('status') == 'success':
             qr_code_link = data['pix']['qrcode_url']
-            await update.message.reply_text(f"Realize o pagamento via Pix no link:\n{qr_code_link}\n\nApós o pagamento, você será liberado automaticamente.")
+            await update.message.reply_text(f"Realize o pagamento via Pix no link:\n{qr_code_link}\n\nApós o pagamento, confirme aqui.")
         else:
             await update.message.reply_text("Erro ao gerar cobrança. Tente novamente.")
     except Exception as e:
@@ -74,8 +35,17 @@ async def main():
     app.add_handler(CommandHandler("valor29_99", receber_pagamento))
     app.add_handler(CommandHandler("valor49_99", receber_pagamento))
 
-    
-    app.run_polling()
+    await app.initialize()
+    await app.start()
+    await app.updater.start_polling()
+    await app.updater.idle()
+
+# Funções complementares
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text("Bem-vindo! Use os comandos para iniciar o pagamento.")
+
+async def comprar(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text("Escolha o valor: /valor9_99 /valor19_99 /valor29_99 /valor49_99")
 
 if __name__ == '__main__':
     import asyncio
