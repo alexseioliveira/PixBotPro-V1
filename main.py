@@ -44,7 +44,8 @@ async def main():
     await app.updater.idle()
 
 if __name__ == '__main__':
-    asyncio.run(main())
+    main()
+
 
 # Funções complementares
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
