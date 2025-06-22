@@ -23,15 +23,14 @@ async def receber_pagamento(update: Update, context: ContextTypes.DEFAULT_TYPE):
     except Exception as e:
         await update.message.reply_text("Erro. Tente novamente.")
 
-# Função de início
+# Funções complementares
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Bem-vindo! Use os comandos para iniciar o pagamento.")
 
-# Função de escolha de compra
 async def comprar(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Escolha o valor: /valor9_99 /valor19_99 /valor29_99 /valor49_99")
 
-# Função principal do bot
+# Função principal
 async def main():
     app = ApplicationBuilder().token(BOT_TOKEN).build()
 
