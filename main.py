@@ -5,10 +5,8 @@ import requests
 from telegram import Update
 from telegram.ext import ApplicationBuilder, ContextTypes, CommandHandler, CallbackContext
 
-# CONFIGURAÇÕES DO BOT:
-BOT_TOKEN = '7894687678:AAGrp4b_zY44BcC1ldOpCwxRi4me3Zikfa4'
-PUSHINPAY_TOKEN = '34902|FqMRbMDl0hWCXmiRDvNVYRSZOioT5TR1WOoTn6Owc152f119'
-GROUP_ID = -1002201363601  # ID do seu grupo
+from config import BOT_TOKEN, PUSHINPAY_TOKEN, GROUP_ID
+
 
 # Iniciar banco de dados SQLite
 conn = sqlite3.connect('assinantes.db')
