@@ -66,12 +66,14 @@ async def receber_pagamento(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def main():
     app = ApplicationBuilder().token(BOT_TOKEN).build()
 
-    app.add_handler(CommandHandler("start", start))
-    app.add_handler(CommandHandler("comprar", comprar))
-    app.add_handler(CommandHandler("9.99", receber_pagamento))
-    app.add_handler(CommandHandler("19.99", receber_pagamento))
-    app.add_handler(CommandHandler("29.99", receber_pagamento))
-    app.add_handler(CommandHandler("49.99", receber_pagamento))
+  app.add_handler(CommandHandler("start", start))
+app.add_handler(CommandHandler("comprar", comprar))
+app.add_handler(CommandHandler("pagar", receber_pagamento))
+app.add_handler(CommandHandler("valor9_99", receber_pagamento))
+app.add_handler(CommandHandler("valor19_99", receber_pagamento))
+app.add_handler(CommandHandler("valor29_99", receber_pagamento))
+app.add_handler(CommandHandler("valor49_99", receber_pagamento))
+
     
     app.run_polling()
 
